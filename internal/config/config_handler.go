@@ -3,32 +3,61 @@ package config
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"os"
 )
 
 type Config struct {
-	DatabaseURL string `json:"db_url"`
+	DatabaseURL     string `json:"db_url"`
+	CurrentUserName string `json:"current_user_name"`
 }
 
-func Read() Config {
-	homeDir, err := os.UserHomeDir()
+func getConfigDirectory() (string, error) {
+	path, err := os.UserHomeDir()
 	if err != nil {
-		log.Fatal("Error getting home directory...")
+		return "", fmt.Errorf("error getting home directory")
 	}
 
-	byteValue, err := os.ReadFile(homeDir + ".gatorconfig")
+	return path + "/.gatorconfig.json", nil
+}
+
+func Read() (Config, error) {
+	homeDir, err := getConfigDirectory()
 	if err != nil {
-		log.Fatal("Error reading config file...")
+		return Config{}, fmt.Errorf("error getting home directory")
+	}
+
+	byteValue, err := os.ReadFile(homeDir)
+	if err != nil {
+		return Config{}, fmt.Errorf("error reading config file")
 	}
 
 	var config Config
 
 	err = json.Unmarshal(byteValue, &config)
 	if err != nil {
-		log.Fatal("Error unmarshlling config file...")
+		return Config{}, fmt.Errorf("error unmarshlling config file")
 	}
 
-	fmt.Println(config.DatabaseURL)
-	return config
+	return config, nil
+}
+
+func (c *Config) SetUser(name string) error {
+	homeDir, err := getConfigDirectory()
+	if err != nil {
+		return fmt.Errorf("error getting home directory")
+	}
+
+	c.CurrentUserName = name
+
+	jsonData, err := json.MarshalIndent(c, "", "  ")
+	if err != nil {
+		return fmt.Errorf("error marshalling config")
+	}
+
+	err = os.WriteFile(homeDir, jsonData, 0644)
+	if err != nil {
+		return fmt.Errorf("error writing config to file")
+	}
+
+	return nil
 }
