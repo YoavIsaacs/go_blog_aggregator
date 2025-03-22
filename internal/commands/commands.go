@@ -6,39 +6,39 @@ import (
 	"github.com/YoavIsaacs/go_blog_aggregator/internal/config"
 )
 
-type state struct {
-	config *config.Config
+type State struct {
+	Config config.Config
 }
 
-type command struct {
-	commandName string
-	args        []string
+type Command struct {
+	CommandName string
+	Args        []string
 }
 
-type commands struct {
-	allCommands map[string]func(*state, command) error
+type Commands struct {
+	AllCommands map[string]func(*State, Command) error
 }
 
-func handlerLogin(s *state, cmd command) error {
-	if len(cmd.args) == 0 {
-		return fmt.Errorf("expected 1 argument, the username\ncorrect usage: login [USERNAME]")
+func HandlerLogin(s *State, cmd Command) error {
+	if len(cmd.Args) == 0 {
+		return fmt.Errorf("expected 1 argument, username\ncorrect usage: login [USERNAME]")
 	}
 
-	err := s.config.SetUser(cmd.args[0])
+	err := s.Config.SetUser(cmd.Args[0])
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf("The username has beed set successfully. Username is now %v", cmd.args[0])
+	fmt.Printf("The username has been set successfully. Username is now %v", cmd.Args[0])
 	return nil
 }
 
-func (c *commands) register(name string, f func(*state, command) error) {
-	c.allCommands[name] = f
+func (c *Commands) Register(name string, f func(*State, Command) error) {
+	c.AllCommands[name] = f
 }
 
-func (c *commands) run(s *state, cmd command) error {
-	err := c.allCommands[cmd.commandName](s, cmd)
+func (c *Commands) Run(s *State, cmd Command) error {
+	err := c.AllCommands[cmd.CommandName](s, cmd)
 	if err != nil {
 		return err
 	}
