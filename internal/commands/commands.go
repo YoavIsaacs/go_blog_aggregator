@@ -8,7 +8,7 @@ type state struct {
 	config *config.Config
 }
 
-type commands struct {
+type command struct {
 	commandName string
 	args        []string
 }
