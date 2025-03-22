@@ -17,7 +17,7 @@ type command struct {
 
 func handlerLogin(s *state, cmd command) error {
 	if len(cmd.args) == 0 {
-		return fmt.Errorf("expected 1 arguments, the username\ncorrect usage: login [USERNAME]")
+		return fmt.Errorf("expected 1 argument, the username\ncorrect usage: login [USERNAME]")
 	}
 
 	err := s.config.SetUser(cmd.args[0])
