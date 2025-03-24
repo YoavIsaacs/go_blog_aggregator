@@ -9,3 +9,6 @@ CREATE TABLE users (
   updated_at TIMESTAMP NOT NULL,
   name TEXT UNIQUE NOT NULL
 );
+
+-- +goode Down
+DROP TABLE users;
