@@ -30,7 +30,15 @@ func HandlerLogin(s *State, cmd Command) error {
 		return fmt.Errorf("expected 1 argument, username\ncorrect usage: login [USERNAME]")
 	}
 
-	err := s.Config.SetUser(cmd.Args[0])
+	ctx := context.Background()
+
+	_, err := s.DB.GetUser(ctx, cmd.Args[0])
+	if err != nil {
+		fmt.Println("error: user does not exist")
+		os.Exit(1)
+	}
+
+	err = s.Config.SetUser(cmd.Args[0])
 	if err != nil {
 		return err
 	}
