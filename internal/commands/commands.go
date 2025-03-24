@@ -102,3 +102,20 @@ func handleRegister(s *State, cmd Command) error {
 	fmt.Printf("user %s was created and set successfully\n", usr.Name)
 	return nil
 }
+
+func HandleReset(s *State, cmd Command) error {
+	if len(cmd.Args) != 0 {
+		return fmt.Errorf("error: expected no arguments")
+	}
+
+	ctx := context.Background()
+
+	err := s.DB.ResetUsers(ctx)
+	if err != nil {
+		fmt.Println("error: error reseting users table")
+		os.Exit(1)
+	}
+
+	fmt.Println("successfully reset users table")
+	return nil
+}
