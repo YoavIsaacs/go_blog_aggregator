@@ -36,6 +36,7 @@ func main() {
 	}
 
 	cmds.Register("login", commands.HandlerLogin)
+	cmds.Register("register", commands.HandleRegister)
 
 	args := os.Args[1:]
 
