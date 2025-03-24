@@ -6,6 +6,7 @@ import (
 
 	"github.com/YoavIsaacs/go_blog_aggregator/internal/commands"
 	"github.com/YoavIsaacs/go_blog_aggregator/internal/config"
+	_ "github.com/lib/pq"
 )
 
 func main() {
