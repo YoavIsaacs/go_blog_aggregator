@@ -119,3 +119,27 @@ func HandleReset(s *State, cmd Command) error {
 	fmt.Println("successfully reset users table")
 	return nil
 }
+
+func HandleGetAllUsers(s *State, cmd Command) error {
+	if len(cmd.Args) != 0 {
+		return fmt.Errorf("error: expected no arguments")
+	}
+
+	ctx := context.Background()
+
+	users, err := s.DB.GetAllUsers(ctx)
+	if err != nil {
+		fmt.Println("error: error getting all users from the database")
+		os.Exit(1)
+	}
+
+	for _, user := range users {
+		if s.Config.CurrentUserName == user.Name {
+			fmt.Printf("* %s (current)\n", user.Name)
+		} else {
+			fmt.Printf("* %s\n", user.Name)
+		}
+	}
+
+	return nil
+}
