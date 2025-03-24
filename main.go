@@ -1,11 +1,13 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"os"
 
 	"github.com/YoavIsaacs/go_blog_aggregator/internal/commands"
 	"github.com/YoavIsaacs/go_blog_aggregator/internal/config"
+	"github.com/YoavIsaacs/go_blog_aggregator/internal/database"
 	_ "github.com/lib/pq"
 )
 
@@ -16,8 +18,17 @@ func main() {
 		return
 	}
 
+	db, err := sql.Open("postgres", c.DatabaseURL)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	dbQueries := database.New(db)
+
 	state := commands.State{
 		Config: c,
+		DB:     dbQueries,
 	}
 
 	cmds := commands.Commands{

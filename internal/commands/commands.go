@@ -4,10 +4,12 @@ import (
 	"fmt"
 
 	"github.com/YoavIsaacs/go_blog_aggregator/internal/config"
+	"github.com/YoavIsaacs/go_blog_aggregator/internal/database"
 )
 
 type State struct {
 	Config config.Config
+	DB     *database.Queries
 }
 
 type Command struct {
