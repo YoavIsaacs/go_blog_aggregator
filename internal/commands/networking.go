@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/xml"
 	"fmt"
+	"html"
 	"io"
 	"net/http"
 	"time"
@@ -23,7 +24,7 @@ type RSSItem struct {
 	PubDate     string `xml:"pubDate"`
 }
 
-func fetchFeed(ctx context.Context, feedURL string) (*RSSFeed, error) {
+func FetchFeed(ctx context.Context, feedURL string) (*RSSFeed, error) {
 	client := &http.Client{
 		Timeout: time.Second * 10,
 	}
@@ -57,5 +58,12 @@ func fetchFeed(ctx context.Context, feedURL string) (*RSSFeed, error) {
 		return nil, fmt.Errorf("error: failed to unmarshal RSS feed: %w", err)
 	}
 
+	rssFeed.Title = html.UnescapeString(rssFeed.Title)
+	rssFeed.Description = html.UnescapeString(rssFeed.Description)
+
+	for _, feed := range rssFeed.Item {
+		feed.Title = html.UnescapeString(feed.Title)
+		feed.Description = html.UnescapeString(feed.Description)
+	}
 	return &rssFeed, nil
 }
