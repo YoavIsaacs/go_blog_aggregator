@@ -11,10 +11,12 @@ import (
 )
 
 type RSSFeed struct {
-	Title       string    `xml:"title"`
-	Link        string    `xml:"link"`
-	Description string    `xml:"description"`
-	Item        []RSSItem `xml:"item"`
+	Channel struct {
+		Title       string    `xml:"title"`
+		Link        string    `xml:"link"`
+		Description string    `xml:"description"`
+		Item        []RSSItem `xml:"item"`
+	} `xml:"channel"`
 }
 
 type RSSItem struct {
@@ -58,12 +60,12 @@ func FetchFeed(ctx context.Context, feedURL string) (*RSSFeed, error) {
 		return nil, fmt.Errorf("error: failed to unmarshal RSS feed: %w", err)
 	}
 
-	rssFeed.Title = html.UnescapeString(rssFeed.Title)
-	rssFeed.Description = html.UnescapeString(rssFeed.Description)
+	rssFeed.Channel.Title = html.UnescapeString(rssFeed.Channel.Title)
+	rssFeed.Channel.Description = html.UnescapeString(rssFeed.Channel.Description)
 
-	for _, feed := range rssFeed.Item {
-		feed.Title = html.UnescapeString(feed.Title)
-		feed.Description = html.UnescapeString(feed.Description)
+	for i := range rssFeed.Channel.Item {
+		rssFeed.Channel.Item[i].Title = html.UnescapeString(rssFeed.Channel.Item[i].Title)
+		rssFeed.Channel.Item[i].Description = html.UnescapeString(rssFeed.Channel.Item[i].Description)
 	}
 	return &rssFeed, nil
 }

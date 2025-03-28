@@ -143,3 +143,14 @@ func HandleGetAllUsers(s *State, cmd Command) error {
 
 	return nil
 }
+
+func HandleAgg(s *State, cmd Command) error {
+	rssFeed, err := FetchFeed(context.Background(), "https://www.wagslane.dev/index.xml")
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("%+v\n", rssFeed)
+
+	return nil
+}
