@@ -39,6 +39,7 @@ func main() {
 	cmds.Register("register", commands.HandleRegister)
 	cmds.Register("reset", commands.HandleReset)
 	cmds.Register("users", commands.HandleGetAllUsers)
+	cmds.Register("agg", commands.HandleAgg)
 
 	args := os.Args[1:]
 
