@@ -143,3 +143,14 @@ func HandleGetAllUsers(s *State, cmd Command) error {
 
 	return nil
 }
+
+func HandleAddFeed(s *State, cmd Command) error {
+	if len(cmd.Args) != 2 {
+		fmt.Println("error: missing args: expecting 'addFeed [NAME] [URL]'")
+		os.Exit(1)
+	}
+
+	ctx := context.Background()
+
+	usr := s.DB.GetUser(ctx, ar)
+}
